@@ -5,6 +5,10 @@ function init() {
     canvas = document.getElementById('gameCanvas');
     context = canvas.getContext('2d');
 
+    window.addEventListener('keydown', function(e) {
+        console.log("key down: " + e.keyCode);
+    }, false);
+
     startGame();
 }
 
