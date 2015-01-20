@@ -1,29 +1,28 @@
 var canvas = null;
 var context = null;
 
-var currentDirection = "north";
+var currentDirection = '';
 var gameLoopIntervalId = -1;
 var hounds = [];
-var fox = {x: 100, y: 200};
-var amy = {x: 400, y: 20};
+var fox = createFox(100, 100);
+var amy = createAmy(400, 200);
+var allSprites = {hounds: hounds, fox: fox, amy: amy};
 
 function init() {
     window.addEventListener('keydown', function(e) {
-        console.log("key down: " + e.keyCode);
-
         switch(e.keyCode) {
             // arrow keys to move
         case 38:
-            currentDirection = "north";
+            currentDirection = 'north';
             break;
         case 37:
-            currentDirection = "west";
+            currentDirection = 'west';
             break;
         case 40:
-            currentDirection = "south";
+            currentDirection = 'south';
             break;
         case 39:
-            currentDirection = "east";
+            currentDirection = 'east';
             break;
 
             // q to quit
@@ -33,18 +32,30 @@ function init() {
         }
     }, false);
 
+    window.addEventListener('keyup', function(e) {
+        currentDirection = '';
+    }, false);
+
     for (i = 1; i < 6; i++) {
-        hounds[i - 1] = createHound(i * 30, i * 40);
+        allSprites.hounds[i - 1] = createHound(i * 30, i * 40);
     }
 
-    startGameLoop(context);
+    startGameLoop();
 }
 
 function createHound(x, y) {
-    return {x: x, y: y, isMovingTowardsAmy: true}
+    return {x: x, y: y, isMovingTowardsAmy: true, speed: 3}
 }
 
-function startGameLoop(context) {
+function createAmy(x, y) {
+    return {x: x, y: y}
+}
+
+function createFox(x, y) {
+    return {x: x, y: y, speed: 2}
+}
+
+function startGameLoop() {
     gameLoopIntervalId = window.setInterval(drawNextFrame, 10);
 }
 
@@ -59,44 +70,45 @@ function drawNextFrame() {
 }
 
 function drawBackground(context) {
-    context.fillStyle = "rgb(200,200,100)";
+    context.fillStyle = 'rgb(200,200,100)';
     context.fillRect(0, 0, 600, 400);
 }
 
 function drawHounds(context) {
-    context.fillStyle = "rgb(0,0,180)";
+    context.fillStyle = 'rgb(0,0,180)';
 
-    hounds.forEach(function(hound) {
+    allSprites.hounds.forEach(function(hound) {
         updateCoords(hound);
         context.fillRect(hound.x, hound.y, 25, 25);
     });
 }
 
 function updateCoords(hound) {
-    var speed = 3;
+    amy = allSprites.amy
+
     if (hound.isMovingTowardsAmy) {
         if (hound.x < amy.x) {
-            hound.x += speed;
+            hound.x += hound.speed;
         } else if (hound.x > amy.x) {
-            hound.x -= speed;
+            hound.x -= hound.speed;
         }
 
         if (hound.y < amy.y) {
-            hound.y += speed;
+            hound.y += hound.speed;
         } else if (hound.y > amy.y) {
-            hound.y -= speed;
+            hound.y -= hound.speed;
         }
     } else {
         if (hound.x < fox.x) {
-            hound.x += speed;
+            hound.x += hound.speed;
         } else if (hound.x > fox.x) {
-            hound.x -= speed;
+            hound.x -= hound.speed;
         }
 
         if (hound.y < fox.y) {
-            hound.y += speed;
+            hound.y += hound.speed;
         } else if (hound.y > fox.y) {
-            hound.y -= speed;
+            hound.y -= hound.speed;
         }
     }
 }
@@ -104,38 +116,35 @@ function updateCoords(hound) {
 function drawFox(context) {
     updateCurrentCoordinates();
 
-    context.fillStyle = "rgb(200,0,0)";
+    context.fillStyle = 'rgb(200,0,0)';
     context.fillRect(fox.x, fox.y, 20, 20);
 }
 
 function drawAmy(context) {
-    context.fillStyle = "rgb(0,100,100)";
+    context.fillStyle = 'rgb(0,100,100)';
     context.fillRect(amy.x, amy.y, 20, 20);
 }
 
 function updateCurrentCoordinates() {
-    var speed = 1;
+    console.log(fox);
     switch(currentDirection) {
-    case "north":
-        fox.y -= speed;
+    case 'north':
+        fox.y -= fox.speed;
         break;
-    case "south":
-        fox.y += speed;
+    case 'south':
+        fox.y += fox.speed;
         break;
-    case "east":
-        fox.x += speed;
+    case 'east':
+        fox.x += fox.speed;
         break;
-    case "west":
-        fox.x -= speed;
+    case 'west':
+        fox.x -= fox.speed;
         break;
     }
 }
 
 // test suite
 var runTestSuite = true;
-
-function assertEquals(exp, act, msg) {
-}
 
 function assertEquals(exp, act, msg) {
     if (exp !== act) {
@@ -153,10 +162,18 @@ function assertEquals(exp, act, msg) {
 
 if (runTestSuite) {
     var hound = createHound(100, 200);
+    var amy = createAmy(200, 200);
+    var sprites = {hounds: [hound], amy: amy};
 
     console.log('building a hound');
     assertEquals(100, hound.x);
     assertEquals(200, hound.y);
     assertEquals(3, hound.speed, 'hound default speed is 3');
     assertEquals(true, hound.isMovingTowardsAmy, 'hound moves towards Amy by default');
+
+    console.log('moving a hound');
+    movedHound = moveHound(hound, sprites);
+
+    assertEquals(100, hound.x);
+    assertEquals(200, hound.y);
 }
