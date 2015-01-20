@@ -93,6 +93,7 @@ function updateCoords(hound) {
 
 function chase(hound, chasee) {
     if (hound.x < amy.x) {
+
         hound.x += hound.speed;
     } else if (hound.x > amy.x) {
         hound.x -= hound.speed;
@@ -102,6 +103,23 @@ function chase(hound, chasee) {
         hound.y += hound.speed;
     } else if (hound.y > amy.y) {
         hound.y -= hound.speed;
+    }
+}
+
+function move(hound, direction) {
+    switch (direction) {
+    case 'north':
+        hound.y -= hound.speed;
+        break;
+    case 'south':
+        hound.y += hound.speed;
+        break;
+    case 'east':
+        hound.x += hound.speed;
+        break;
+    case 'west':
+        hound.x -= hound.speed;
+        break;
     }
 }
 
@@ -118,20 +136,7 @@ function drawAmy(context) {
 }
 
 function updateCurrentCoordinates() {
-    switch(currentDirection) {
-    case 'north':
-        fox.y -= fox.speed;
-        break;
-    case 'south':
-        fox.y += fox.speed;
-        break;
-    case 'east':
-        fox.x += fox.speed;
-        break;
-    case 'west':
-        fox.x -= fox.speed;
-        break;
-    }
+    move(fox, currentDirection);
 }
 
 // test suite
@@ -150,19 +155,44 @@ function assertEquals(exp, act, msg) {
     }
 }
 
+function header(msg) {
+    console.log('===================' + msg + '===================');
+}
+
 function runTests() {
     var hound = createHound(100, 100);
     var amy = createAmy(200, 200);
     var sprites = {hounds: [hound], amy: amy};
 
-    console.log('building a hound');
+    header('building a hound');
+
     assertEquals(100, hound.x);
     assertEquals(100, hound.y);
     assertEquals(3, hound.speed, 'hound default speed is 3');
     assertEquals(true, hound.isMovingTowardsAmy, 'hound moves towards Amy by default');
 
-    console.log('moving a hound');
-    movedHound = chase(hound, amy);
+    header('moving a hound');
+
+    hound.speed = 10;
+    move(hound, 'north');
+    assertEquals(100, hound.x);
+    assertEquals(90, hound.y);
+
+    move(hound, 'east');
+    assertEquals(110, hound.x);
+    assertEquals(90, hound.y);
+
+    move(hound, 'south');
+    assertEquals(110, hound.x);
+    assertEquals(100, hound.y);
+
+    move(hound, 'west');
+    assertEquals(100, hound.x);
+    assertEquals(100, hound.y);
+
+    header('chasing');
+
+    chase(hound, amy);
 
     assertEquals(100 + hound.speed, hound.x, 'hound chased amy x');
     assertEquals(100 + hound.speed, hound.y, 'hound chased amy y');
