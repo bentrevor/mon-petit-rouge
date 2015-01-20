@@ -34,10 +34,14 @@ function init() {
     }, false);
 
     for (i = 1; i < 6; i++) {
-        hounds[i - 1] = {x: i * 30, y: i * 40, isMovingTowardsAmy: true};
+        hounds[i - 1] = createHound(i * 30, i * 40);
     }
 
     startGameLoop(context);
+}
+
+function createHound(x, y) {
+    return {x: x, y: y, isMovingTowardsAmy: true}
 }
 
 function startGameLoop(context) {
@@ -69,14 +73,31 @@ function drawHounds(context) {
 }
 
 function updateCoords(hound) {
+    var speed = 3;
     if (hound.isMovingTowardsAmy) {
-        console.log('vvvvvvvvv old hound.x: ' + hound.x);
-        hound.x = (hound.x + amy.x) / 3;
-        console.log('^^^^^^^^^ new hound.x: ' + hound.x);
-        hound.y = (hound.y + amy.y) / 3;
+        if (hound.x < amy.x) {
+            hound.x += speed;
+        } else if (hound.x > amy.x) {
+            hound.x -= speed;
+        }
+
+        if (hound.y < amy.y) {
+            hound.y += speed;
+        } else if (hound.y > amy.y) {
+            hound.y -= speed;
+        }
     } else {
-        hound.x = (hound.x + fox.x) / 3;
-        hound.y = (hound.y + fox.y) / 3;
+        if (hound.x < fox.x) {
+            hound.x += speed;
+        } else if (hound.x > fox.x) {
+            hound.x -= speed;
+        }
+
+        if (hound.y < fox.y) {
+            hound.y += speed;
+        } else if (hound.y > fox.y) {
+            hound.y -= speed;
+        }
     }
 }
 
@@ -93,7 +114,7 @@ function drawAmy(context) {
 }
 
 function updateCurrentCoordinates() {
-    speed = 1;
+    var speed = 1;
     switch(currentDirection) {
     case "north":
         fox.y -= speed;
@@ -108,4 +129,34 @@ function updateCurrentCoordinates() {
         fox.x -= speed;
         break;
     }
+}
+
+// test suite
+var runTestSuite = true;
+
+function assertEquals(exp, act, msg) {
+}
+
+function assertEquals(exp, act, msg) {
+    if (exp !== act) {
+        console.error('Fail');
+    } else {
+        passMsg = 'pass';
+
+        if (typeof msg != 'undefined') {
+            passMsg += ': ' + msg
+        }
+
+        console.log(passMsg);
+    }
+}
+
+if (runTestSuite) {
+    var hound = createHound(100, 200);
+
+    console.log('building a hound');
+    assertEquals(100, hound.x);
+    assertEquals(200, hound.y);
+    assertEquals(3, hound.speed, 'hound default speed is 3');
+    assertEquals(true, hound.isMovingTowardsAmy, 'hound moves towards Amy by default');
 }
