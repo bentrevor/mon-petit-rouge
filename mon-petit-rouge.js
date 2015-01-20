@@ -93,16 +93,15 @@ function updateCoords(hound) {
 
 function chase(hound, chasee) {
     if (hound.x < amy.x) {
-
-        hound.x += hound.speed;
+        move(hound, 'east');
     } else if (hound.x > amy.x) {
-        hound.x -= hound.speed;
+        move(hound, 'west');
     }
 
     if (hound.y < amy.y) {
-        hound.y += hound.speed;
+        move(hound, 'south');
     } else if (hound.y > amy.y) {
-        hound.y -= hound.speed;
+        move(hound, 'north');
     }
 }
 
