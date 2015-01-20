@@ -84,32 +84,24 @@ function drawHounds(context) {
 }
 
 function updateCoords(hound) {
-    amy = allSprites.amy
-
     if (hound.isMovingTowardsAmy) {
-        if (hound.x < amy.x) {
-            hound.x += hound.speed;
-        } else if (hound.x > amy.x) {
-            hound.x -= hound.speed;
-        }
-
-        if (hound.y < amy.y) {
-            hound.y += hound.speed;
-        } else if (hound.y > amy.y) {
-            hound.y -= hound.speed;
-        }
+        chase(hound, allSprites.amy)
     } else {
-        if (hound.x < fox.x) {
-            hound.x += hound.speed;
-        } else if (hound.x > fox.x) {
-            hound.x -= hound.speed;
-        }
+        chase(hound, allSprites.fox)
+    }
+}
 
-        if (hound.y < fox.y) {
-            hound.y += hound.speed;
-        } else if (hound.y > fox.y) {
-            hound.y -= hound.speed;
-        }
+function chase(hound, chasee) {
+    if (hound.x < amy.x) {
+        hound.x += hound.speed;
+    } else if (hound.x > amy.x) {
+        hound.x -= hound.speed;
+    }
+
+    if (hound.y < amy.y) {
+        hound.y += hound.speed;
+    } else if (hound.y > amy.y) {
+        hound.y -= hound.speed;
     }
 }
 
@@ -126,7 +118,6 @@ function drawAmy(context) {
 }
 
 function updateCurrentCoordinates() {
-    console.log(fox);
     switch(currentDirection) {
     case 'north':
         fox.y -= fox.speed;
@@ -144,7 +135,6 @@ function updateCurrentCoordinates() {
 }
 
 // test suite
-var runTestSuite = true;
 
 function assertEquals(exp, act, msg) {
     if (exp !== act) {
@@ -160,20 +150,20 @@ function assertEquals(exp, act, msg) {
     }
 }
 
-if (runTestSuite) {
-    var hound = createHound(100, 200);
+function runTests() {
+    var hound = createHound(100, 100);
     var amy = createAmy(200, 200);
     var sprites = {hounds: [hound], amy: amy};
 
     console.log('building a hound');
     assertEquals(100, hound.x);
-    assertEquals(200, hound.y);
+    assertEquals(100, hound.y);
     assertEquals(3, hound.speed, 'hound default speed is 3');
     assertEquals(true, hound.isMovingTowardsAmy, 'hound moves towards Amy by default');
 
     console.log('moving a hound');
-    movedHound = moveHound(hound, sprites);
+    movedHound = chase(hound, amy);
 
-    assertEquals(100, hound.x);
-    assertEquals(200, hound.y);
+    assertEquals(100 + hound.speed, hound.x, 'hound chased amy x');
+    assertEquals(100 + hound.speed, hound.y, 'hound chased amy y');
 }
