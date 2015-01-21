@@ -6,29 +6,24 @@ var gameLoopIntervalId = -1;
 var hounds = [];
 var fox = createFox(100, 100);
 var amy = createAmy(400, 200);
+var directions = {
+    37: 'west',
+    38: 'north',
+    39: 'east',
+    40: 'south',
+}
 var allSprites = {hounds: hounds, fox: fox, amy: amy};
 
 function init() {
     window.addEventListener('keydown', function(e) {
         switch(e.keyCode) {
-            // arrow keys to move
-        case 38:
-            currentDirection = 'north';
-            break;
-        case 37:
-            currentDirection = 'west';
-            break;
-        case 40:
-            currentDirection = 'south';
-            break;
-        case 39:
-            currentDirection = 'east';
-            break;
-
             // q to quit
         case 81:
             window.clearInterval(gameLoopIntervalId);
             break;
+        default:
+            // arrow keys to move
+            currentDirection = directions[e.keyCode];
         }
     }, false);
 
@@ -92,15 +87,15 @@ function updateCoords(hound) {
 }
 
 function chase(hound, chasee) {
-    if (hound.x < amy.x) {
+    if (hound.x < chasee.x) {
         move(hound, 'east');
-    } else if (hound.x > amy.x) {
+    } else if (hound.x > chasee.x) {
         move(hound, 'west');
     }
 
-    if (hound.y < amy.y) {
+    if (hound.y < chasee.y) {
         move(hound, 'south');
-    } else if (hound.y > amy.y) {
+    } else if (hound.y > chasee.y) {
         move(hound, 'north');
     }
 }
@@ -136,63 +131,4 @@ function drawAmy(context) {
 
 function updateCurrentCoordinates() {
     move(fox, currentDirection);
-}
-
-// test suite
-
-function assertEquals(exp, act, msg) {
-    if (exp !== act) {
-        console.error('Fail');
-    } else {
-        passMsg = 'pass';
-
-        if (typeof msg != 'undefined') {
-            passMsg += ': ' + msg
-        }
-
-        console.log(passMsg);
-    }
-}
-
-function header(msg) {
-    console.log('===================' + msg + '===================');
-}
-
-function runTests() {
-    var hound = createHound(100, 100);
-    var amy = createAmy(200, 200);
-    var sprites = {hounds: [hound], amy: amy};
-
-    header('building a hound');
-
-    assertEquals(100, hound.x);
-    assertEquals(100, hound.y);
-    assertEquals(3, hound.speed, 'hound default speed is 3');
-    assertEquals(true, hound.isMovingTowardsAmy, 'hound moves towards Amy by default');
-
-    header('moving a hound');
-
-    hound.speed = 10;
-    move(hound, 'north');
-    assertEquals(100, hound.x);
-    assertEquals(90, hound.y);
-
-    move(hound, 'east');
-    assertEquals(110, hound.x);
-    assertEquals(90, hound.y);
-
-    move(hound, 'south');
-    assertEquals(110, hound.x);
-    assertEquals(100, hound.y);
-
-    move(hound, 'west');
-    assertEquals(100, hound.x);
-    assertEquals(100, hound.y);
-
-    header('chasing');
-
-    chase(hound, amy);
-
-    assertEquals(100 + hound.speed, hound.x, 'hound chased amy x');
-    assertEquals(100 + hound.speed, hound.y, 'hound chased amy y');
 }

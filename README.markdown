@@ -3,11 +3,11 @@
 
 > "Why did you bring me here?  What is that? A bone?"
 >
-> "Mon petit rouge."
+> "Mon Petit Rouge."
 >
 > "What?"
 >
-> "Mon petit rouge."
+> "Mon Petit Rouge."
 >
 > "What is happening to you?"
 >
@@ -15,11 +15,11 @@
 >
 > "Very nice, now... let's go."
 >
-> "I called him mon petit rouge - my little red one.  I fed him each day.  He looked at me through the cage with his little golden eyes."
+> "I called him Mon Petit Rouge - my little red one.  I fed him each day.  He looked at me through the cage with his little golden eyes."
 >
 > "I know! Let's travel back to earth now, okay?"
 >
-> "I didn't want the hounds to tear him apart, but they were ravenous and howling for the hunt.  The day of the hunt, I got up before dawn to see mon petit rouge. He was shivering in his cage.  I opened the door, and I let him run free in the barn.  The hounds could hear him, and they could smell him.  They were going crazy."
+> "I didn't want the hounds to tear him apart, but they were ravenous and howling for the hunt.  The day of the hunt, I got up before dawn to see Mon Petit Rouge. He was shivering in his cage.  I opened the door, and I let him run free in the barn.  The hounds could hear him, and they could smell him.  They were going crazy."
 >
 > "I know the feeling."
 >
