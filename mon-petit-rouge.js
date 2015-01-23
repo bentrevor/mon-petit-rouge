@@ -1,7 +1,6 @@
 var canvas = null;
 var context = null;
 
-var currentDirection = '';
 var gameLoopIntervalId = -1;
 var hounds = [];
 var fox = createFox(100, 100);
@@ -23,12 +22,13 @@ function init() {
             break;
         default:
             // arrow keys to move
-            currentDirection = directions[e.keyCode];
+            fox.direction = directions[e.keyCode];
         }
     }, false);
 
+    // TODO: this is causing the fox to stutter when changing directions
     window.addEventListener('keyup', function(e) {
-        currentDirection = '';
+        fox.direction = '';
     }, false);
 
     for (i = 1; i < 6; i++) {
@@ -39,15 +39,15 @@ function init() {
 }
 
 function createHound(x, y) {
-    return {x: x, y: y, isChasingAmy: true, speed: 2}
+    return {x: x, y: y, isChasingAmy: true, speed: 0.2}
 }
 
 function createAmy(x, y) {
-    return {x: x, y: y, speed: 3, wanderDirection: 'north', eccentricity: 0.95}
+    return {x: x, y: y, speed: 0.3, direction: 'north', eccentricity: 0.95}
 }
 
 function createFox(x, y) {
-    return {x: x, y: y, speed: 2}
+    return {x: x, y: y, speed: 1}
 }
 
 function startGameLoop() {
@@ -88,20 +88,24 @@ function moveHound(hound) {
 
 function chase(hound, chasee) {
     if (hound.x < chasee.x) {
-        move(hound, 'east');
+        hound.direction = 'east';
     } else if (hound.x > chasee.x) {
-        move(hound, 'west');
+        hound.direction = 'west';
     }
+
+    move(hound);
 
     if (hound.y < chasee.y) {
-        move(hound, 'south');
+        hound.direction = 'south';
     } else if (hound.y > chasee.y) {
-        move(hound, 'north');
+        hound.direction = 'north';
     }
+
+    move(hound);
 }
 
-function move(sprite, direction) {
-    switch (direction) {
+function move(sprite) {
+    switch (sprite.direction) {
     case 'north':
         sprite.y -= sprite.speed;
         break;
@@ -125,13 +129,13 @@ function wander(sprite, randomizer) {
 
     if (rand > e) {
         if (rand < e + delta) {
-            sprite.wanderDirection = 'east';
+            sprite.direction = 'east';
         } else if (rand < e + (2 * delta)) {
-            sprite.wanderDirection = 'west';
+            sprite.direction = 'west';
         } else if (rand < e + (3 * delta)) {
-            sprite.wanderDirection = 'north';
+            sprite.direction = 'north';
         } else {
-            sprite.wanderDirection = 'south';
+            sprite.direction = 'south';
         }
     }
 }
@@ -147,10 +151,10 @@ function drawAmy(context) {
     wander(amy, Math);
 
     context.fillStyle = 'rgb(0,100,100)';
-    move(amy, amy.wanderDirection);
+    move(amy);
     context.fillRect(amy.x, amy.y, 20, 20);
 }
 
 function updateFoxCoordinates() {
-    move(fox, currentDirection);
+    move(fox);
 }

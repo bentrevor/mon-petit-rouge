@@ -45,29 +45,32 @@ function runTests() {
 
     assertEquals(100, hound.x);
     assertEquals(100, hound.y);
-    assertEquals(2, hound.speed, 'hound default speed is 2');
     assertEquals(true, hound.isChasingAmy, 'hound moves towards Amy by default');
 
     header('building a amy');
 
-    assertEquals(amy.wanderDirection, 'north', 'amy starts wandering north');
+    assertEquals(amy.direction, 'north', 'amy starts wandering north');
 
     header('moving a hound');
 
     hound.speed = 10;
-    move(hound, 'north');
+    hound.direction = 'north';
+    move(hound);
     assertEquals(100, hound.x);
     assertEquals(90, hound.y);
 
-    move(hound, 'east');
+    hound.direction = 'east';
+    move(hound);
     assertEquals(110, hound.x);
     assertEquals(90, hound.y);
 
-    move(hound, 'south');
+    hound.direction = 'south';
+    move(hound);
     assertEquals(110, hound.x);
     assertEquals(100, hound.y);
 
-    move(hound, 'west');
+    hound.direction = 'west';
+    move(hound);
     assertEquals(100, hound.x);
     assertEquals(100, hound.y);
 
@@ -93,15 +96,15 @@ function runTests() {
     }
 
     wander(amy, randomizer);
-    assertEquals('north', amy.wanderDirection, "amy.wanderDirection doesn't change for rand == 0.5");
+    assertEquals('north', amy.direction, "amy.direction doesn't change for rand == 0.5");
     wander(amy, randomizer);
-    assertEquals('north', amy.wanderDirection, "amy.wanderDirection doesn't change for rand == 0.4");
+    assertEquals('north', amy.direction, "amy.direction doesn't change for rand == 0.4");
     wander(amy, randomizer);
-    assertEquals('north', amy.wanderDirection, "amy.wanderDirection doesn't change for rand == 0.3");
+    assertEquals('north', amy.direction, "amy.direction doesn't change for rand == 0.3");
 
     // the randomizer is at 0.9999, which will never be 'north'
     wander(amy, randomizer);
-    assert(amy.wanderDirection != 'north', "amy.wanderDirection changes to east for (amy.e < rand < (amy.e + delta))");
+    assert(amy.direction != 'north', "amy.direction changes to east for (amy.e < rand < (amy.e + delta))");
 
     if (noFailures) {
         console.log('success! at time ' + currentTime());
