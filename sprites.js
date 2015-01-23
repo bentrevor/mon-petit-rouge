@@ -6,6 +6,10 @@ var Sprite = function(options) {
     this.speed = options.speed * gameSpeed;
     this.direction = options.direction;
     this.fillStyle = options.fillStyle;
+
+    this.distanceTo = function (other) {
+        return Math.sqrt(Math.pow((this.x - other.x), 2) + Math.pow((this.y - other.y), 2));
+    }
 };
 
 function Hound(x, y) {
@@ -28,7 +32,7 @@ function Hound(x, y) {
     };
 
     this.closerToAmy = function() {
-        return distance(this, amy) < distance(this, fox);
+        return this.distanceTo(amy) < this.distanceTo(fox);
     };
 
     this.moveTowardsTarget = function() {

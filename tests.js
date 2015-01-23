@@ -112,11 +112,11 @@ function runTests() {
     hound = new Hound(100, 100);
     amy = new Amy(110, 100);
 
-    assertEquals(10, distance(hound, amy), "distance in a straight line");
+    assertEquals(10, hound.distanceTo(amy), "distance in a straight line");
 
     amy = new Amy(130, 140);
 
-    assertEquals(50, distance(hound, amy), "distance at an angle");
+    assertEquals(50, hound.distanceTo(amy), "distance at an angle");
 
     assert(hound.isChasingAmy, 'hound starts off chasing amy');
 

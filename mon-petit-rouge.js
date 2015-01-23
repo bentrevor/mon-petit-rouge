@@ -20,13 +20,21 @@ var allSprites = {hounds: hounds, fox: fox, amy: amy};
 
 function init() {
     window.addEventListener('keydown', function(e) {
+        console.log(e.keyCode);
         switch(e.keyCode) {
-            // q to quit
-        case 81:
-            window.clearInterval(gameLoopIntervalId);
+
+            // r to reset sprites
+        case 82:
+            placeSprites();
             break;
-        default:
+
+            // space to pause/unpause
+        case 32:
+            pauseOrUnpause();
+            break;
+
             // arrow keys to move
+        default:
             fox.direction = directions[e.keyCode];
         }
     }, false);
@@ -36,9 +44,7 @@ function init() {
         fox.direction = '';
     }, false);
 
-    for (i = 1; i < 6; i++) {
-        allSprites.hounds[i - 1] = new Hound(i * 30, i * 40);
-    }
+    placeSprites();
 
     canvas = document.getElementById('gameCanvas');
     context = canvas.getContext('2d');
@@ -46,11 +52,30 @@ function init() {
     startGameLoop();
 }
 
-function startGameLoop() {
-    gameLoopIntervalId = window.setInterval(drawNextFrame, 20);
+function pauseOrUnpause() {
+    if (gameLoopIntervalId == -1) {
+        startGameLoop();
+    } else {
+        pauseGame();
+    }
 }
 
+function pauseGame() {
+    window.clearInterval(gameLoopIntervalId);
+    gameLoopIntervalId = -1;
+}
 
-function distance(spriteA, spriteB) {
-    return Math.sqrt(Math.pow((spriteA.x - spriteB.x), 2) + Math.pow((spriteA.y - spriteB.y), 2));
+function placeSprites() {
+    fox = new Fox(100, 100);
+    amy = new Amy(400, 200);
+
+    for (i = 1; i < 6; i++) {
+        allSprites.hounds[i - 1] = new Hound(i * 30, i * 40);
+    }
+}
+
+function startGameLoop() {
+    if (gameLoopIntervalId == -1) {
+        gameLoopIntervalId = window.setInterval(drawNextFrame, 20);
+    }
 }
