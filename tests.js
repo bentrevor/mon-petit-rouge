@@ -37,9 +37,8 @@ function currentTime() {
 }
 
 function runTests() {
-    var hound = createHound(100, 100);
-    var amy = createAmy(200, 200);
-    var sprites = {hounds: [hound], amy: amy};
+    hound = createHound(100, 100);
+    amy = createAmy(200, 200);
 
     header('building a hound');
 
@@ -105,6 +104,27 @@ function runTests() {
     // the randomizer is at 0.9999, which will never be 'north'
     wander(amy, randomizer);
     assert(amy.direction != 'north', "amy.direction changes to east for (amy.e < rand < (amy.e + delta))");
+
+    header('changing targets');
+
+    hound = createHound(100, 100);
+    amy = createAmy(110, 100);
+
+    assertEquals(10, distance(hound, amy), "distance in a straight line");
+
+    amy = createAmy(130, 140);
+
+    assertEquals(50, distance(hound, amy), "distance at an angle");
+
+    assert(hound.isChasingAmy, 'hound starts off chasing amy');
+
+    fox = createFox(100, 160);
+    updateTarget(hound);
+    assert(hound.isChasingAmy, "hound chases amy when she's closer");
+
+    fox = createFox(100, 120);
+    updateTarget(hound);
+    assert(!hound.isChasingAmy, "hound chases fox when he's closer");
 
     if (noFailures) {
         console.log('success! at time ' + currentTime());

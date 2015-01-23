@@ -2,6 +2,8 @@ var canvas = null;
 var context = null;
 
 var gameLoopIntervalId = -1;
+// TODO: these should only be accessed through allSprites
+var gameSpeed = 3;
 var hounds = [];
 var fox = createFox(100, 100);
 var amy = createAmy(400, 200);
@@ -39,15 +41,15 @@ function init() {
 }
 
 function createHound(x, y) {
-    return {x: x, y: y, isChasingAmy: true, speed: 0.2}
+    return {x: x, y: y, isChasingAmy: true, speed: 0.2 * gameSpeed}
 }
 
 function createAmy(x, y) {
-    return {x: x, y: y, speed: 0.3, direction: 'north', eccentricity: 0.95}
+    return {x: x, y: y, speed: gameSpeed, direction: 'north'}
 }
 
 function createFox(x, y) {
-    return {x: x, y: y, speed: 1}
+    return {x: x, y: y, speed: gameSpeed}
 }
 
 function startGameLoop() {
@@ -69,13 +71,45 @@ function drawBackground(context) {
     context.fillRect(0, 0, 600, 400);
 }
 
+function drawFox(context) {
+    move(fox);
+
+    context.fillStyle = 'rgb(200,0,0)';
+    context.fillRect(fox.x, fox.y, 20, 20);
+}
+
+function drawAmy(context) {
+    wander(amy, Math);
+    move(amy);
+
+    context.fillStyle = 'rgb(0,100,100)';
+    context.fillRect(amy.x, amy.y, 20, 20);
+}
+
 function drawHounds(context) {
     context.fillStyle = 'rgb(0,0,180)';
 
     allSprites.hounds.forEach(function(hound) {
+        updateTarget(hound);
         moveHound(hound);
         context.fillRect(hound.x, hound.y, 25, 25);
     });
+}
+
+function updateTarget(hound) {
+    if (amyIsCloser(hound)) {
+        hound.isChasingAmy = true;
+    } else {
+        hound.isChasingAmy = false;
+    }
+}
+
+function amyIsCloser(hound) {
+    return distance(hound, amy) < distance(hound, fox);
+}
+
+function distance(spriteA, spriteB) {
+    return Math.sqrt(Math.pow((spriteA.x - spriteB.x), 2) + Math.pow((spriteA.y - spriteB.y), 2));
 }
 
 function moveHound(hound) {
@@ -104,6 +138,7 @@ function chase(hound, chasee) {
     move(hound);
 }
 
+// aka updateCoordinates
 function move(sprite) {
     switch (sprite.direction) {
     case 'north':
@@ -124,37 +159,22 @@ function move(sprite) {
 function wander(sprite, randomizer) {
     rand = randomizer.random();
 
-    var e = sprite.eccentricity;
-    var delta = (1 - e) / 4;
+    // eccentricity: correllated to how likely amy is to change directions.
+    var eccentricity = 0.05;
+    // conformity: the opposite of eccentricity?
+    var c = 1 - eccentricity;
 
-    if (rand > e) {
-        if (rand < e + delta) {
+    var delta = eccentricity / 4;
+
+    if (rand > c) {
+        if (rand < c + delta) {
             sprite.direction = 'east';
-        } else if (rand < e + (2 * delta)) {
+        } else if (rand < c + (2 * delta)) {
             sprite.direction = 'west';
-        } else if (rand < e + (3 * delta)) {
+        } else if (rand < c + (3 * delta)) {
             sprite.direction = 'north';
         } else {
             sprite.direction = 'south';
         }
     }
-}
-
-function drawFox(context) {
-    updateFoxCoordinates();
-
-    context.fillStyle = 'rgb(200,0,0)';
-    context.fillRect(fox.x, fox.y, 20, 20);
-}
-
-function drawAmy(context) {
-    wander(amy, Math);
-
-    context.fillStyle = 'rgb(0,100,100)';
-    move(amy);
-    context.fillRect(amy.x, amy.y, 20, 20);
-}
-
-function updateFoxCoordinates() {
-    move(fox);
 }
