@@ -1,23 +1,7 @@
 function chase(hound) {
     hound.updateTarget();
-    hound.moveTowardsTarget();
+    hound.directionTowardsTarget();
     move(hound);
-}
-
-function moveTowards(chaser, chasee) {
-    if (chaser.x < chasee.x) {
-        chaser.direction = 'east';
-    } else if (chaser.x > chasee.x) {
-        chaser.direction = 'west';
-    }
-
-    move(chaser);
-
-    if (chaser.y < chasee.y) {
-        chaser.direction = 'south';
-    } else if (chaser.y > chasee.y) {
-        chaser.direction = 'north';
-    }
 }
 
 // aka updateCoordinates

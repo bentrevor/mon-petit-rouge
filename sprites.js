@@ -35,13 +35,33 @@ function Hound(x, y) {
         return this.distanceTo(amy) < this.distanceTo(fox);
     };
 
-    this.moveTowardsTarget = function() {
+    this.directionTowardsTarget = function() {
         if (this.isChasingAmy) {
-            moveTowards(this, allSprites.amy)
+            this.directionTowards(amy)
         } else {
-            moveTowards(this, allSprites.fox)
+            this.directionTowards(fox)
         }
     };
+
+    this.directionTowards = function(target) {
+        // TODO: this is pretty wiggly, it should use the same change-direction
+        // logic as amy
+        if (Math.random() > 0.5) {
+            if (this.x < target.x) {
+                this.direction = 'east';
+            } else if (this.x > target.x) {
+                this.direction = 'west';
+            }
+        } else {
+            if (this.y < target.y) {
+                this.direction = 'south';
+            } else if (this.y > target.y) {
+                this.direction = 'north';
+            }
+        }
+
+        move(this);
+    }
 }
 
 function Amy(x, y) {

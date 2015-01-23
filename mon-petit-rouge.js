@@ -5,22 +5,19 @@ var CANVAS_WIDTH = 600;
 var CANVAS_HEIGHT = 400;
 
 var gameLoopIntervalId = -1;
-// TODO: these should only be accessed through allSprites
 var gameSpeed = 3;
 var hounds = [];
-var fox = new Fox(100, 100);
-var amy = new Amy(400, 200);
+var fox;
+var amy;
 var directions = {
     37: 'west',
     38: 'north',
     39: 'east',
     40: 'south',
 }
-var allSprites = {hounds: hounds, fox: fox, amy: amy};
 
 function init() {
     window.addEventListener('keydown', function(e) {
-        console.log(e.keyCode);
         switch(e.keyCode) {
 
             // r to reset sprites
@@ -70,7 +67,7 @@ function placeSprites() {
     amy = new Amy(400, 200);
 
     for (i = 1; i < 6; i++) {
-        allSprites.hounds[i - 1] = new Hound(i * 30, i * 40);
+        hounds[i - 1] = new Hound(i * 30, i * 40);
     }
 }
 

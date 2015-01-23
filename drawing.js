@@ -21,7 +21,7 @@ function drawAmy() {
 }
 
 function drawHounds() {
-    allSprites.hounds.forEach(function(hound) {
+    hounds.forEach(function(hound) {
         chase(hound);
         draw(hound);
     });
