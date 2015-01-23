@@ -75,7 +75,8 @@ function runTests() {
 
     header('chasing');
 
-    chase(hound, amy);
+    fox = createFox(500, 500);
+    chase(hound);
 
     assertEquals(100 + hound.speed, hound.x, 'hound chased amy x');
     assertEquals(100 + hound.speed, hound.y, 'hound chased amy y');
@@ -119,11 +120,11 @@ function runTests() {
     assert(hound.isChasingAmy, 'hound starts off chasing amy');
 
     fox = createFox(100, 160);
-    updateTarget(hound);
+    hound.updateTarget();
     assert(hound.isChasingAmy, "hound chases amy when she's closer");
 
     fox = createFox(100, 120);
-    updateTarget(hound);
+    hound.updateTarget();
     assert(!hound.isChasingAmy, "hound chases fox when he's closer");
 
     if (noFailures) {
