@@ -1,6 +1,9 @@
 var canvas = null;
 var context = null;
 
+var CANVAS_WIDTH = 600;
+var CANVAS_HEIGHT = 400;
+
 var gameLoopIntervalId = -1;
 // TODO: these should only be accessed through allSprites
 var gameSpeed = 3;
@@ -41,15 +44,33 @@ function init() {
 }
 
 function createHound(x, y) {
-    return {x: x, y: y, isChasingAmy: true, speed: 0.2 * gameSpeed}
+    return {
+        x: x,
+        y: y,
+        size: 25,
+        isChasingAmy: true,
+        speed: 0.2 * gameSpeed
+    }
 }
 
 function createAmy(x, y) {
-    return {x: x, y: y, speed: gameSpeed, direction: 'north'}
+    return {
+        x: x,
+        y: y,
+        size: 20,
+        speed: gameSpeed,
+        direction: 'north'
+    }
 }
 
 function createFox(x, y) {
-    return {x: x, y: y, speed: gameSpeed}
+    return {
+        x: x,
+        y: y,
+        size: 20,
+        speed: gameSpeed,
+        direction: ''
+    }
 }
 
 function startGameLoop() {
@@ -75,7 +96,7 @@ function drawFox(context) {
     move(fox);
 
     context.fillStyle = 'rgb(200,0,0)';
-    context.fillRect(fox.x, fox.y, 20, 20);
+    draw(fox, context);
 }
 
 function drawAmy(context) {
@@ -83,7 +104,7 @@ function drawAmy(context) {
     move(amy);
 
     context.fillStyle = 'rgb(0,100,100)';
-    context.fillRect(amy.x, amy.y, 20, 20);
+    draw(amy, context);
 }
 
 function drawHounds(context) {
@@ -92,8 +113,12 @@ function drawHounds(context) {
     allSprites.hounds.forEach(function(hound) {
         updateTarget(hound);
         moveHound(hound);
-        context.fillRect(hound.x, hound.y, 25, 25);
+        draw(hound, context);
     });
+}
+
+function draw(sprite, context) {
+    context.fillRect(sprite.x, sprite.y, sprite.size, sprite.size);
 }
 
 function updateTarget(hound) {
@@ -153,6 +178,26 @@ function move(sprite) {
     case 'west':
         sprite.x -= sprite.speed;
         break;
+    }
+
+    keepOnCanvas(sprite);
+}
+
+function keepOnCanvas(sprite) {
+    if (sprite.x + sprite.size > CANVAS_WIDTH) {
+        sprite.x = CANVAS_WIDTH - sprite.size;
+    }
+
+    if (sprite.x < 0) {
+        sprite.x = 0
+    }
+
+    if (sprite.y + sprite.size > CANVAS_HEIGHT) {
+        sprite.y = CANVAS_HEIGHT - sprite.size;
+    }
+
+    if (sprite.y < 0) {
+        sprite.y = 0
     }
 }
 
