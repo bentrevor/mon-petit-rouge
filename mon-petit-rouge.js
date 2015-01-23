@@ -43,7 +43,7 @@ function createHound(x, y) {
 }
 
 function createAmy(x, y) {
-    return {x: x, y: y, speed: 3, wanderDirection: 'north'}
+    return {x: x, y: y, speed: 3, wanderDirection: 'north', eccentricity: 0.95}
 }
 
 function createFox(x, y) {
@@ -120,12 +120,15 @@ function move(sprite, direction) {
 function wander(sprite, randomizer) {
     rand = randomizer.random();
 
-    if (rand > 0.9) {
-        if (rand < 0.925) {
+    var e = sprite.eccentricity;
+    var delta = (1 - e) / 4;
+
+    if (rand > e) {
+        if (rand < e + delta) {
             sprite.wanderDirection = 'east';
-        } else if (rand < 0.95) {
+        } else if (rand < e + (2 * delta)) {
             sprite.wanderDirection = 'west';
-        } else if (rand < 0.975) {
+        } else if (rand < e + (3 * delta)) {
             sprite.wanderDirection = 'north';
         } else {
             sprite.wanderDirection = 'south';

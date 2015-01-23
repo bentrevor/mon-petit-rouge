@@ -45,7 +45,7 @@ function runTests() {
 
     assertEquals(100, hound.x);
     assertEquals(100, hound.y);
-    assertEquals(3, hound.speed, 'hound default speed is 2');
+    assertEquals(2, hound.speed, 'hound default speed is 2');
     assertEquals(true, hound.isChasingAmy, 'hound moves towards Amy by default');
 
     header('building a amy');
@@ -81,7 +81,7 @@ function runTests() {
     header('wandering');
 
     var randomizer = {
-        results: [0.5, 0.4, 0.3, 0.91, 0.93, 0.96, 0.99],
+        results: [0.5, 0.4, 0.3, 0.9999],
 
         random: function() {
             if (this.results.length == 1) {
@@ -99,16 +99,13 @@ function runTests() {
     wander(amy, randomizer);
     assertEquals('north', amy.wanderDirection, "amy.wanderDirection doesn't change for rand == 0.3");
 
+    // the randomizer is at 0.9999, which will never be 'north'
     wander(amy, randomizer);
-    assertEquals('east', amy.wanderDirection, "amy.wanderDirection changes to east for 0.9 < rand < 0.925");
-    wander(amy, randomizer);
-    assertEquals('west', amy.wanderDirection, "amy.wanderDirection changes to west for 0.925 < rand < 0.95");
-    wander(amy, randomizer);
-    assertEquals('north', amy.wanderDirection, "amy.wanderDirection changes to north for 0.95 < rand < 0.975");
-    wander(amy, randomizer);
-    assertEquals('south', amy.wanderDirection, "amy.wanderDirection changes to south for 0.975 < rand < 1");
+    assert(amy.wanderDirection != 'north', "amy.wanderDirection changes to east for (amy.e < rand < (amy.e + delta))");
 
     if (noFailures) {
         console.log('success! at time ' + currentTime());
+    } else {
+        console.log('failure! at time ' + currentTime());
     }
 }
