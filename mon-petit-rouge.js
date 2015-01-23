@@ -8,8 +8,8 @@ var gameLoopIntervalId = -1;
 // TODO: these should only be accessed through allSprites
 var gameSpeed = 3;
 var hounds = [];
-var fox = createFox(100, 100);
-var amy = createAmy(400, 200);
+var fox = new Fox(100, 100);
+var amy = new Amy(400, 200);
 var directions = {
     37: 'west',
     38: 'north',
@@ -37,14 +37,17 @@ function init() {
     }, false);
 
     for (i = 1; i < 6; i++) {
-        allSprites.hounds[i - 1] = createHound(i * 30, i * 40);
+        allSprites.hounds[i - 1] = new Hound(i * 30, i * 40);
     }
+
+    canvas = document.getElementById('gameCanvas');
+    context = canvas.getContext('2d');
 
     startGameLoop();
 }
 
 function startGameLoop() {
-    gameLoopIntervalId = window.setInterval(drawNextFrame, 10);
+    gameLoopIntervalId = window.setInterval(drawNextFrame, 20);
 }
 
 

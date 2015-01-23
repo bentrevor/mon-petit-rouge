@@ -1,7 +1,4 @@
 function drawNextFrame() {
-    canvas = document.getElementById('gameCanvas');
-    context = canvas.getContext('2d');
-
     drawBackground();
     drawFox();
     drawAmy();
@@ -20,16 +17,12 @@ function drawFox() {
 
 function drawAmy() {
     wander(amy, Math);
-    move(amy);
     draw(amy);
 }
 
 function drawHounds() {
     allSprites.hounds.forEach(function(hound) {
         chase(hound);
-        move(hound);
-        // hound.updateTarget();
-        // moveHound(hound);
         draw(hound);
     });
 }

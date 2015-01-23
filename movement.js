@@ -1,10 +1,7 @@
-function amyIsCloser(hound) {
-    return distance(hound, amy) < distance(hound, fox);
-}
-
 function chase(hound) {
     hound.updateTarget();
     hound.moveTowardsTarget();
+    move(hound);
 }
 
 function moveTowards(chaser, chasee) {
@@ -44,21 +41,10 @@ function move(sprite) {
 }
 
 function keepOnCanvas(sprite) {
-    if (sprite.x + sprite.size > CANVAS_WIDTH) {
-        sprite.x = CANVAS_WIDTH - sprite.size;
-    }
-
-    if (sprite.x < 0) {
-        sprite.x = 0
-    }
-
-    if (sprite.y + sprite.size > CANVAS_HEIGHT) {
-        sprite.y = CANVAS_HEIGHT - sprite.size;
-    }
-
-    if (sprite.y < 0) {
-        sprite.y = 0
-    }
+    sprite.x = Math.min(sprite.x, CANVAS_WIDTH - sprite.size);
+    sprite.x = Math.max(sprite.x, 0);
+    sprite.y = Math.min(sprite.y, CANVAS_HEIGHT - sprite.size);
+    sprite.y = Math.max(sprite.y, 0);
 }
 
 function wander(sprite, randomizer) {
@@ -82,4 +68,6 @@ function wander(sprite, randomizer) {
             sprite.direction = 'south';
         }
     }
+
+    move(sprite);
 }
