@@ -39,11 +39,11 @@ function init() {
 }
 
 function createHound(x, y) {
-    return {x: x, y: y, isMovingTowardsAmy: true, speed: 3}
+    return {x: x, y: y, isChasingAmy: true, speed: 2}
 }
 
 function createAmy(x, y) {
-    return {x: x, y: y}
+    return {x: x, y: y, speed: 3, wanderDirection: 'north'}
 }
 
 function createFox(x, y) {
@@ -60,8 +60,8 @@ function drawNextFrame() {
 
     drawBackground(context);
     drawFox(context);
-    drawHounds(context);
     drawAmy(context);
+    drawHounds(context);
 }
 
 function drawBackground(context) {
@@ -73,13 +73,13 @@ function drawHounds(context) {
     context.fillStyle = 'rgb(0,0,180)';
 
     allSprites.hounds.forEach(function(hound) {
-        updateCoords(hound);
+        moveHound(hound);
         context.fillRect(hound.x, hound.y, 25, 25);
     });
 }
 
-function updateCoords(hound) {
-    if (hound.isMovingTowardsAmy) {
+function moveHound(hound) {
+    if (hound.isChasingAmy) {
         chase(hound, allSprites.amy)
     } else {
         chase(hound, allSprites.fox)
@@ -100,35 +100,54 @@ function chase(hound, chasee) {
     }
 }
 
-function move(hound, direction) {
+function move(sprite, direction) {
     switch (direction) {
     case 'north':
-        hound.y -= hound.speed;
+        sprite.y -= sprite.speed;
         break;
     case 'south':
-        hound.y += hound.speed;
+        sprite.y += sprite.speed;
         break;
     case 'east':
-        hound.x += hound.speed;
+        sprite.x += sprite.speed;
         break;
     case 'west':
-        hound.x -= hound.speed;
+        sprite.x -= sprite.speed;
         break;
     }
 }
 
+function wander(sprite, randomizer) {
+    rand = randomizer.random();
+
+    if (rand > 0.9) {
+        if (rand < 0.925) {
+            sprite.wanderDirection = 'east';
+        } else if (rand < 0.95) {
+            sprite.wanderDirection = 'west';
+        } else if (rand < 0.975) {
+            sprite.wanderDirection = 'north';
+        } else {
+            sprite.wanderDirection = 'south';
+        }
+    }
+}
+
 function drawFox(context) {
-    updateCurrentCoordinates();
+    updateFoxCoordinates();
 
     context.fillStyle = 'rgb(200,0,0)';
     context.fillRect(fox.x, fox.y, 20, 20);
 }
 
 function drawAmy(context) {
+    wander(amy, Math);
+
     context.fillStyle = 'rgb(0,100,100)';
+    move(amy, amy.wanderDirection);
     context.fillRect(amy.x, amy.y, 20, 20);
 }
 
-function updateCurrentCoordinates() {
+function updateFoxCoordinates() {
     move(fox, currentDirection);
 }

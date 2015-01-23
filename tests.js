@@ -1,15 +1,29 @@
+var noFailures = true;
+
 function assertEquals(exp, act, msg) {
     if (exp !== act) {
-        console.error('Fail');
+        noFailures = false;
+        console.error(maybeConcat('Failure', msg) + "\nexpected: " + exp + "\nactual: " + act);
     } else {
-        passMsg = 'pass';
+        console.log(maybeConcat('pass', msg));
+    }
+}
 
-        if (typeof msg != 'undefined') {
-            passMsg += ': ' + msg
+function assert(cond, msg) {
+    if (!cond) {
+        noFailures = false;
+        console.error(maybeConcat('Failure', msg));
+    } else {
+        console.log(maybeConcat('pass', msg));
+    }
+}
+
+function maybeConcat(str, maybeStr) {
+        if (typeof maybeStr != 'undefined') {
+            return str += ': ' + maybeStr;
         }
 
-        console.log(passMsg);
-    }
+        return str;
 }
 
 function header(msg) {
@@ -31,8 +45,12 @@ function runTests() {
 
     assertEquals(100, hound.x);
     assertEquals(100, hound.y);
-    assertEquals(3, hound.speed, 'hound default speed is 3');
-    assertEquals(true, hound.isMovingTowardsAmy, 'hound moves towards Amy by default');
+    assertEquals(3, hound.speed, 'hound default speed is 2');
+    assertEquals(true, hound.isChasingAmy, 'hound moves towards Amy by default');
+
+    header('building a amy');
+
+    assertEquals(amy.wanderDirection, 'north', 'amy starts wandering north');
 
     header('moving a hound');
 
@@ -60,5 +78,37 @@ function runTests() {
     assertEquals(100 + hound.speed, hound.x, 'hound chased amy x');
     assertEquals(100 + hound.speed, hound.y, 'hound chased amy y');
 
-    console.log('success! at time ' + currentTime());
+    header('wandering');
+
+    var randomizer = {
+        results: [0.5, 0.4, 0.3, 0.91, 0.93, 0.96, 0.99],
+
+        random: function() {
+            if (this.results.length == 1) {
+                return this.results[0];
+            } else {
+                return this.results.shift();
+            }
+        },
+    }
+
+    wander(amy, randomizer);
+    assertEquals('north', amy.wanderDirection, "amy.wanderDirection doesn't change for rand == 0.5");
+    wander(amy, randomizer);
+    assertEquals('north', amy.wanderDirection, "amy.wanderDirection doesn't change for rand == 0.4");
+    wander(amy, randomizer);
+    assertEquals('north', amy.wanderDirection, "amy.wanderDirection doesn't change for rand == 0.3");
+
+    wander(amy, randomizer);
+    assertEquals('east', amy.wanderDirection, "amy.wanderDirection changes to east for 0.9 < rand < 0.925");
+    wander(amy, randomizer);
+    assertEquals('west', amy.wanderDirection, "amy.wanderDirection changes to west for 0.925 < rand < 0.95");
+    wander(amy, randomizer);
+    assertEquals('north', amy.wanderDirection, "amy.wanderDirection changes to north for 0.95 < rand < 0.975");
+    wander(amy, randomizer);
+    assertEquals('south', amy.wanderDirection, "amy.wanderDirection changes to south for 0.975 < rand < 1");
+
+    if (noFailures) {
+        console.log('success! at time ' + currentTime());
+    }
 }
