@@ -1,6 +1,6 @@
 function chase(hound) {
     hound.updateTarget();
-    hound.directionTowardsTarget();
+    hound.maybeChangeDirection(Math, hound.directionsTowardsTarget());
     move(hound);
 }
 
@@ -32,26 +32,6 @@ function keepOnCanvas(sprite) {
 }
 
 function wander(sprite, randomizer) {
-    rand = randomizer.random();
-
-    // eccentricity: correllated to how likely amy is to change directions.
-    var eccentricity = 0.05;
-    // conformity: the opposite of eccentricity?
-    var c = 1 - eccentricity;
-
-    var delta = eccentricity / 4;
-
-    if (rand > c) {
-        if (rand < c + delta) {
-            sprite.direction = 'east';
-        } else if (rand < c + (2 * delta)) {
-            sprite.direction = 'west';
-        } else if (rand < c + (3 * delta)) {
-            sprite.direction = 'north';
-        } else {
-            sprite.direction = 'south';
-        }
-    }
-
+    sprite.maybeChangeDirection(randomizer);
     move(sprite);
 }

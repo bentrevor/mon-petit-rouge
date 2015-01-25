@@ -30,6 +30,20 @@ function header(msg) {
     console.log('===================' + msg + '===================');
 }
 
+function createRandomizer(results) {
+    return {
+        results: results,
+
+        random: function() {
+            if (this.results.length == 1) {
+                return this.results[0];
+            } else {
+                return this.results.shift();
+            }
+        },
+    }
+}
+
 function currentTime() {
     var date = new Date();
 
@@ -37,6 +51,8 @@ function currentTime() {
 }
 
 function runTests() {
+    runDirectionRandomizerTests();
+
     hound = new Hound(100, 100);
     amy = new Amy(200, 200);
 
@@ -81,31 +97,6 @@ function runTests() {
 
     assert(hound.x > 100 || hound.y > 100, 'hound chased amy x or y');
 
-    header('wandering');
-
-    var randomizer = {
-        results: [0.5, 0.4, 0.3, 0.9999],
-
-        random: function() {
-            if (this.results.length == 1) {
-                return this.results[0];
-            } else {
-                return this.results.shift();
-            }
-        },
-    }
-
-    wander(amy, randomizer);
-    assertEquals('north', amy.direction, "amy.direction doesn't change for rand == 0.5");
-    wander(amy, randomizer);
-    assertEquals('north', amy.direction, "amy.direction doesn't change for rand == 0.4");
-    wander(amy, randomizer);
-    assertEquals('north', amy.direction, "amy.direction doesn't change for rand == 0.3");
-
-    // the randomizer is at 0.9999, which will never be 'north'
-    wander(amy, randomizer);
-    assert(amy.direction != 'north', "amy.direction changes to east for (amy.e < rand < (amy.e + delta))");
-
     header('changing targets');
 
     hound = new Hound(100, 100);
@@ -132,4 +123,21 @@ function runTests() {
     } else {
         console.log('failure! at time ' + currentTime());
     }
+}
+
+function runDirectionRandomizerTests() {
+    header('#maybeChangeDirection');
+
+    amy = new Amy(200, 200);
+
+    assertEquals('north', amy.direction, 'amy starts north');
+    assert(amy.fearOfChange <= 1, 'fearOfChange is the probability that the sprite continues in the same direction (per frame)');
+
+    var randomizer = createRandomizer([0.5, 0.99]);
+
+    amy.maybeChangeDirection(randomizer);
+    assertEquals('north', amy.direction, "0.5 doesn't change direction");
+
+    amy.maybeChangeDirection(randomizer);
+    assert(amy.direction != 'north', "0.99 changes direction");
 }

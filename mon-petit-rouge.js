@@ -66,12 +66,13 @@ function placeSprites() {
     fox = new Fox(100, 100);
     amy = new Amy(400, 200);
 
-    for (i = 1; i < 6; i++) {
-        hounds[i - 1] = new Hound(i * 30, i * 40);
+    for (i = 1; i < 8; i++) {
+        hounds[i - 1] = new Hound(i * 50, i * 50);
     }
 }
 
 function startGameLoop() {
+    drawNextFrame();
     if (gameLoopIntervalId == -1) {
         gameLoopIntervalId = window.setInterval(drawNextFrame, 20);
     }
