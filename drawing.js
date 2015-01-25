@@ -13,13 +13,13 @@ function drawBackground() {
 }
 
 function drawFox() {
-    move(fox);
-    draw(fox);
+    move(SPRITES.fox);
+    draw(SPRITES.fox);
 }
 
 function drawAmy() {
-    wander(amy, Math);
-    draw(amy);
+    wander(SPRITES.amy, Math);
+    draw(SPRITES.amy);
 }
 
 function drawHounds() {
@@ -33,9 +33,9 @@ function drawHounds() {
 
 function drawLine(hound) {
     if (hound.isChasingAmy) {
-        drawLineBetween(hound, amy);
+        drawLineBetween(hound, SPRITES.amy);
     } else {
-        drawLineBetween(hound, fox);
+        drawLineBetween(hound, SPRITES.fox);
     }
 }
 
@@ -69,10 +69,10 @@ function drawFollowerBars() {
     var foxBarWidth = (foxFollowers / hounds.length) * 400;
     var amyBarWidth = 400 - foxBarWidth;
 
-    context.fillStyle = fox.fillStyle;
+    context.fillStyle = SPRITES.fox.fillStyle;
     context.fillRect(100, 20, foxBarWidth, 20);
 
-    context.fillStyle = amy.fillStyle;
+    context.fillStyle = SPRITES.amy.fillStyle;
     context.fillRect(100 + foxBarWidth, 20, amyBarWidth, 20);
 }
 

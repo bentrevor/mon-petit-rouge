@@ -1,88 +1,89 @@
-var canvas = null;
-var context = null;
+(function() {
+    window.init = function(ns) {
+        canvas = document.getElementById('gameCanvas');
+        ns.context = canvas.getContext('2d');
 
-var CANVAS_WIDTH = 600;
-var CANVAS_HEIGHT = 400;
+        ns.CANVAS_WIDTH = 600;
+        ns.CANVAS_HEIGHT = 400;
 
-var SYNCHRONIZED_HOUNDS = true;
-var FRAME_INTERVAL = 15;
-var TICKS = 0;
+        ns.SYNCHRONIZED_HOUNDS = true;
+        ns.FRAME_INTERVAL = 15;
+        ns.TICKS = 0;
+        ns.SPRITES = this.sprites;
 
-var gameLoopIntervalId = -1;
-var gameSpeed = 1;
-var hounds = [];
-var fox;
-var amy;
+        ns.gameLoopIntervalId = -1;
+        ns.gameSpeed = 1;
+        ns.hounds = [];
 
-var directions = {
-    37: 'west',
-    38: 'north',
-    39: 'east',
-    40: 'south',
-}
-
-function init() {
-    window.addEventListener('keydown', function(e) {
-        switch(e.keyCode) {
-
-            // r to reset sprites
-        case 82:
-            placeSprites();
-            break;
-
-            // space to pause/unpause
-        case 32:
-            pauseOrUnpause();
-            break;
-
-            // arrow keys to move
-        default:
-            fox.direction = directions[e.keyCode];
+        ns.directions = {
+            37: 'west',
+            38: 'north',
+            39: 'east',
+            40: 'south',
         }
-    }, false);
 
-    // TODO: this is causing the fox to stutter when changing directions
-    window.addEventListener('keyup', function(e) {
-        fox.direction = '';
-    }, false);
+        window.addEventListener('keydown', function(e) {
+            switch(e.keyCode) {
 
-    placeSprites();
+                // r to reset sprites
+            case 82:
+                placeSprites();
+                break;
 
-    canvas = document.getElementById('gameCanvas');
-    context = canvas.getContext('2d');
+                // space to pause/unpause
+            case 32:
+                pauseOrUnpause();
+                break;
 
-    startGameLoop();
-}
+                // arrow keys to move
+            default:
+                SPRITES.fox.direction = directions[e.keyCode];
+            }
+        }, false);
 
-function pauseOrUnpause() {
-    if (gameLoopIntervalId == -1) {
+        // TODO: this is causing the fox to stutter when changing directions
+        window.addEventListener('keyup', function(e) {
+            SPRITES.fox.direction = '';
+        }, false);
+
+        placeSprites();
+
         startGameLoop();
-    } else {
-        pauseGame();
     }
-}
 
-function pauseGame() {
-    window.clearInterval(gameLoopIntervalId);
-    gameLoopIntervalId = -1;
-}
-
-function placeSprites() {
-    fox = new Fox(100, 100);
-    amy = new Amy(400, 200);
-
-    for (i = 1; i < 2000; i++) {
-        if (SYNCHRONIZED_HOUNDS) {
-            hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT);
+    function pauseOrUnpause() {
+        if (gameLoopIntervalId == -1) {
+            startGameLoop();
         } else {
-            hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT, i);
+            pauseGame();
         }
     }
-}
 
-function startGameLoop() {
-    drawNextFrame();
-    if (gameLoopIntervalId == -1) {
-        gameLoopIntervalId = window.setInterval(drawNextFrame, FRAME_INTERVAL);
+    function pauseGame() {
+        window.clearInterval(gameLoopIntervalId);
+        gameLoopIntervalId = -1;
     }
-}
+
+    function placeSprites() {
+        var fox = new Fox(100, 100);
+        var amy = new Amy(400, 200);
+
+        window.mpr.sprites.fox = fox;
+        window.mpr.sprites.amy = amy;
+
+        for (i = 1; i < 2000; i++) {
+            if (SYNCHRONIZED_HOUNDS) {
+                hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT);
+            } else {
+                hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT, i);
+            }
+        }
+    }
+
+    function startGameLoop() {
+        drawNextFrame();
+        if (gameLoopIntervalId == -1) {
+            gameLoopIntervalId = window.setInterval(drawNextFrame, FRAME_INTERVAL);
+        }
+    }
+})();
