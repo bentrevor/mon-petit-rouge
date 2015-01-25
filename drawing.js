@@ -3,6 +3,8 @@ function drawNextFrame() {
     drawFox();
     drawAmy();
     drawHounds();
+    drawFollowerCount();
+    drawScores();
 }
 
 function drawBackground() {
@@ -25,6 +27,29 @@ function drawHounds() {
         chase(hound, Math);
         draw(hound);
     });
+}
+
+function drawFollowerCount() {
+    var amyFollowers = 0;
+    var foxFollowers = 0;
+
+    hounds.forEach(function(hound) {
+        if (hound.isChasingAmy) {
+            amyFollowers++;
+        } else {
+            foxFollowers++;
+        }
+    });
+
+    amy.score += amyFollowers;
+    fox.score += foxFollowers;
+    context.fillText('amy: ' + amyFollowers, 20, 40);
+    context.fillText('fox: ' + foxFollowers, 20, 60);
+}
+
+function drawScores() {
+    context.fillText('amy score: ' + Math.floor(amy.score / 100), 500, 40);
+    context.fillText('fox score: ' + Math.floor(fox.score / 100), 500, 60);
 }
 
 function draw(sprite) {

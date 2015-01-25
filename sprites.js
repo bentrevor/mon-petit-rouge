@@ -90,6 +90,8 @@ function Amy(x, y) {
                         direction: 'north',
                         fillStyle: 'rgb(0,100,100)'
                       });
+
+    this.score = 0;
 }
 
 function Fox(x, y) {
@@ -100,6 +102,8 @@ function Fox(x, y) {
                         direction: '',
                         fillStyle: 'rgb(200,0,0)'
                       });
+
+    this.score = 0;
 }
 
 Hound.prototype = Object.create(Sprite.prototype);
