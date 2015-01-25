@@ -63,10 +63,6 @@ function runTests() {
     assertEquals(100, hound.y);
     assertEquals(true, hound.isChasingAmy, 'hound moves towards Amy by default');
 
-    header('building a amy');
-
-    assertEquals(amy.direction, 'north', 'amy starts wandering north');
-
     header('moving a hound');
 
     hound.speed = 10;
@@ -131,7 +127,6 @@ function runSpriteTests() {
 
     var hound = new Hound(100, 100);
     var amy = new Amy(200, 200);
-    amy.direction = '';
 
     directions = hound.directionsTowards(amy);
     assert(directions.indexOf('north') == -1);
@@ -146,7 +141,6 @@ function runSpriteTests() {
     assert(directions.indexOf('west')  != -1);
 
     amy = new Amy(20, 200);
-    amy.direction = '';
 
     directions = hound.directionsTowards(amy);
     assert(directions.indexOf('north') == -1);
@@ -165,8 +159,8 @@ function runDirectionRandomizerTests() {
     header('#maybeChangeDirection');
 
     amy = new Amy(200, 200);
+    amy.direction = 'north';
 
-    assertEquals('north', amy.direction, 'amy starts north');
     assert(amy.fearOfChange <= 1, 'fearOfChange is the probability that the sprite continues in the same direction (per frame)');
 
     var randomizer = createRandomizer([0.5, 0.99]);

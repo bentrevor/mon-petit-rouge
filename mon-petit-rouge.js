@@ -4,7 +4,8 @@ var context = null;
 var CANVAS_WIDTH = 600;
 var CANVAS_HEIGHT = 400;
 
-var FRAME_INTERVAL = 20;
+var FRAME_INTERVAL = 50;
+var TICKS = 0;
 
 var gameLoopIntervalId = -1;
 var gameSpeed = 3;
@@ -69,8 +70,8 @@ function placeSprites() {
     fox = new Fox(100, 100);
     amy = new Amy(400, 200);
 
-    for (i = 1; i < 8; i++) {
-        hounds[i - 1] = new Hound(i * 50, i * 50, i);
+    for (i = 1; i < 5000; i++) {
+        hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT);
     }
 }
 

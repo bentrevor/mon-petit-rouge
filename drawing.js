@@ -1,4 +1,5 @@
 function drawNextFrame() {
+    TICKS++;
     drawBackground();
     drawFox();
     drawAmy();
@@ -24,9 +25,32 @@ function drawAmy() {
 
 function drawHounds() {
     hounds.forEach(function(hound) {
+        hound.updateSpeed();
         chase(hound, Math);
         draw(hound);
+        drawLine(hound);
     });
+}
+
+function drawLine(hound) {
+    if (hound.isChasingAmy) {
+        drawLineBetween(hound, amy);
+    } else {
+        drawLineBetween(hound, fox);
+    }
+}
+
+function drawLineBetween(spriteA, spriteB) {
+    // context.fillStyle = spriteA.fillStyle;
+    var centerAX = spriteA.x + (spriteA.size/2);
+    var centerAY = spriteA.y + (spriteA.size/2);
+    var centerBX = spriteB.x + (spriteB.size/2);
+    var centerBY = spriteB.y + (spriteB.size/2);
+
+    context.beginPath();
+    context.moveTo(centerAX, centerAY);
+    context.lineTo(centerBX, centerBY);
+    context.stroke();
 }
 
 function drawFollowerCount() {

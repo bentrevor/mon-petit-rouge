@@ -53,13 +53,17 @@ function Hound(x, y, id) {
     Sprite.call(this, { id: id,
                         x: x,
                         y: y,
-                        size: 25,
+                        size: 5,
                         speed: 0.5,
                         direction: '',
-                        fillStyle: 'rgb(0,0,180)',
+                        fillStyle: 'rgb(180,180,180)',
                       });
 
     this.isChasingAmy = true;
+
+    this.updateSpeed = function() {
+        this.speed = Math.abs(Math.sin(TICKS / 80) * gameSpeed);
+    };
 
     this.updateTarget = function() {
         if (this.closerToAmy()) {
@@ -85,9 +89,9 @@ function Hound(x, y, id) {
 function Amy(x, y) {
     Sprite.call(this, { x: x,
                         y: y,
-                        size: 20,
-                        speed: 0.5,
-                        direction: 'north',
+                        size: 5,
+                        speed: 0.75,
+                        direction: '',
                         fillStyle: 'rgb(0,100,100)'
                       });
 
@@ -97,8 +101,8 @@ function Amy(x, y) {
 function Fox(x, y) {
     Sprite.call(this, { x: x,
                         y: y,
-                        size: 20,
-                        speed: 1,
+                        size: 5,
+                        speed: 2,
                         direction: '',
                         fillStyle: 'rgb(200,0,0)'
                       });
