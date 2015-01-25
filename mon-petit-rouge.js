@@ -4,11 +4,12 @@ var context = null;
 var CANVAS_WIDTH = 600;
 var CANVAS_HEIGHT = 400;
 
-var FRAME_INTERVAL = 50;
+var SYNCHRONIZED_HOUNDS = true;
+var FRAME_INTERVAL = 15;
 var TICKS = 0;
 
 var gameLoopIntervalId = -1;
-var gameSpeed = 3;
+var gameSpeed = 1;
 var hounds = [];
 var fox;
 var amy;
@@ -70,8 +71,12 @@ function placeSprites() {
     fox = new Fox(100, 100);
     amy = new Amy(400, 200);
 
-    for (i = 1; i < 5000; i++) {
-        hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT);
+    for (i = 1; i < 2000; i++) {
+        if (SYNCHRONIZED_HOUNDS) {
+            hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT);
+        } else {
+            hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT, i);
+        }
     }
 }
 

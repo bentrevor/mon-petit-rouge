@@ -53,16 +53,16 @@ function Hound(x, y, id) {
     Sprite.call(this, { id: id,
                         x: x,
                         y: y,
-                        size: 5,
+                        size: 3,
                         speed: 0.5,
                         direction: '',
-                        fillStyle: 'rgb(180,180,180)',
+                        fillStyle: 'rgb(255,255,255)',
                       });
 
     this.isChasingAmy = true;
 
     this.updateSpeed = function() {
-        this.speed = Math.abs(Math.sin(TICKS / 80) * gameSpeed);
+        this.speed = Math.abs(Math.sin((TICKS / 80) + this.id) * gameSpeed);
     };
 
     this.updateTarget = function() {
@@ -92,10 +92,8 @@ function Amy(x, y) {
                         size: 5,
                         speed: 0.75,
                         direction: '',
-                        fillStyle: 'rgb(0,100,100)'
+                        fillStyle: 'rgb(0,255,0)'
                       });
-
-    this.score = 0;
 }
 
 function Fox(x, y) {
@@ -104,10 +102,8 @@ function Fox(x, y) {
                         size: 5,
                         speed: 2,
                         direction: '',
-                        fillStyle: 'rgb(200,0,0)'
+                        fillStyle: 'rgb(255,0,0)'
                       });
-
-    this.score = 0;
 }
 
 Hound.prototype = Object.create(Sprite.prototype);
