@@ -52,6 +52,7 @@ function currentTime() {
 
 function runTests() {
     runDirectionRandomizerTests();
+    runSpriteTests();
 
     hound = new Hound(100, 100);
     amy = new Amy(200, 200);
@@ -93,7 +94,7 @@ function runTests() {
 
     fox = new Fox(500, 500);
 
-    chase(hound);
+    chase(hound, createRandomizer([0.99]));
 
     assert(hound.x > 100 || hound.y > 100, 'hound chased amy x or y');
 
@@ -119,10 +120,45 @@ function runTests() {
     assert(!hound.isChasingAmy, "hound chases fox when he's closer");
 
     if (noFailures) {
-        console.log('success! at time ' + currentTime());
+        console.log('\n\nsuccess! at time ' + currentTime());
     } else {
-        console.log('failure! at time ' + currentTime());
+        console.log('\n\nfailure! at time ' + currentTime());
     }
+}
+
+function runSpriteTests() {
+    header('sprites');
+
+    var hound = new Hound(100, 100);
+    var amy = new Amy(200, 200);
+    amy.direction = '';
+
+    directions = hound.directionsTowards(amy);
+    assert(directions.indexOf('north') == -1);
+    assert(directions.indexOf('south') != -1);
+    assert(directions.indexOf('east')  != -1);
+    assert(directions.indexOf('west')  == -1);
+
+    directions = amy.directionsTowards(hound);
+    assert(directions.indexOf('north') != -1);
+    assert(directions.indexOf('south') == -1);
+    assert(directions.indexOf('east')  == -1);
+    assert(directions.indexOf('west')  != -1);
+
+    amy = new Amy(20, 200);
+    amy.direction = '';
+
+    directions = hound.directionsTowards(amy);
+    assert(directions.indexOf('north') == -1);
+    assert(directions.indexOf('south') != -1);
+    assert(directions.indexOf('east')  == -1);
+    assert(directions.indexOf('west')  != -1);
+
+    directions = amy.directionsTowards(hound);
+    assert(directions.indexOf('north') != -1);
+    assert(directions.indexOf('south') == -1);
+    assert(directions.indexOf('east')  != -1);
+    assert(directions.indexOf('west')  == -1);
 }
 
 function runDirectionRandomizerTests() {

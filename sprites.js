@@ -1,12 +1,13 @@
 
 var Sprite = function(options) {
+    this.id           = options.id || -1;
     this.x            = options.x;
     this.y            = options.y;
     this.size         = options.size;
     this.speed        = options.speed * gameSpeed;
     this.direction    = options.direction;
     this.fillStyle    = options.fillStyle;
-    this.fearOfChange = options.fearOfChange || 0.97;
+    this.fearOfChange = options.fearOfChange || 0.95;
 
     this.distanceTo = function (other) {
         return Math.sqrt(Math.pow((this.x - other.x), 2) + Math.pow((this.y - other.y), 2));
@@ -15,21 +16,42 @@ var Sprite = function(options) {
     this.maybeChangeDirection = function(randomizer, directions) {
         var rand = randomizer.random();
 
-        if (typeof directions == 'undefined') {
-            directions = ['north', 'south', 'east', 'west'];
-            directions.splice(directions.indexOf(this.direction), 1);
+        directions = directions || ['north', 'south', 'east', 'west'];
+        maybeRemove(this.direction, directions);
+
+        this.chooseNextDirection(rand, directions);
+    }
+
+    this.chooseNextDirection = function(rand, directions) {
+        if (rand > this.fearOfChange) {
+            randomDirection = directions[Math.floor(Math.random() * directions.length)];
+            this.direction = randomDirection;
+        }
+    }
+
+    this.directionsTowards = function(target) {
+        var directions = [];
+
+        if (this.x < target.x) {
+            directions.push('east');
+        } else if (this.x > target.x) {
+            directions.push('west');
         }
 
-        var f = this.fearOfChange;
-
-        if (rand > f) {
-            this.direction = directions[Math.floor(Math.random() * directions.length)];
+        if (this.y < target.y) {
+            directions.push('south');
+        } else if (this.y > target.y) {
+            directions.push('north');
         }
+
+        maybeRemove(this.direction, directions);
+        return directions;
     }
 };
 
-function Hound(x, y) {
-    Sprite.call(this, { x: x,
+function Hound(x, y, id) {
+    Sprite.call(this, { id: id,
+                        x: x,
                         y: y,
                         size: 25,
                         speed: 0.5,
@@ -53,35 +75,11 @@ function Hound(x, y) {
 
     this.directionsTowardsTarget = function() {
         if (this.isChasingAmy) {
-            return this.directionsTowards(amy)
+            return this.directionsTowards(amy);
         } else {
-            return this.directionsTowards(fox)
+            return this.directionsTowards(fox);
         }
     };
-
-    this.directionsTowards = function(target) {
-        var directions = [];
-
-        if (this.x < target.x) {
-            directions.push('east');
-        } else if (this.x > target.x) {
-            directions.push('west');
-        }
-
-        if (this.y < target.y) {
-            directions.push('south');
-        } else if (this.y > target.y) {
-            directions.push('north');
-        }
-
-        var ind = directions.indexOf(this.direction);
-
-        if (ind != -1) {
-            directions.splice(ind, 1);
-        }
-
-        return directions;
-    }
 }
 
 function Amy(x, y) {

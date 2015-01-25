@@ -4,11 +4,14 @@ var context = null;
 var CANVAS_WIDTH = 600;
 var CANVAS_HEIGHT = 400;
 
+var FRAME_INTERVAL = 20;
+
 var gameLoopIntervalId = -1;
 var gameSpeed = 3;
 var hounds = [];
 var fox;
 var amy;
+
 var directions = {
     37: 'west',
     38: 'north',
@@ -67,13 +70,13 @@ function placeSprites() {
     amy = new Amy(400, 200);
 
     for (i = 1; i < 8; i++) {
-        hounds[i - 1] = new Hound(i * 50, i * 50);
+        hounds[i - 1] = new Hound(i * 50, i * 50, i);
     }
 }
 
 function startGameLoop() {
     drawNextFrame();
     if (gameLoopIntervalId == -1) {
-        gameLoopIntervalId = window.setInterval(drawNextFrame, 20);
+        gameLoopIntervalId = window.setInterval(drawNextFrame, FRAME_INTERVAL);
     }
 }

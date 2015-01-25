@@ -1,6 +1,7 @@
-function chase(hound) {
+function chase(hound, randomizer) {
     hound.updateTarget();
-    hound.maybeChangeDirection(Math, hound.directionsTowardsTarget());
+    var dirs = hound.directionsTowardsTarget();
+    hound.maybeChangeDirection(randomizer, dirs);
     move(hound);
 }
 
@@ -24,6 +25,11 @@ function move(sprite) {
     keepOnCanvas(sprite);
 }
 
+function wander(sprite, randomizer) {
+    sprite.maybeChangeDirection(randomizer);
+    move(sprite);
+}
+
 function keepOnCanvas(sprite) {
     sprite.x = Math.min(sprite.x, CANVAS_WIDTH - sprite.size);
     sprite.x = Math.max(sprite.x, 0);
@@ -31,7 +37,10 @@ function keepOnCanvas(sprite) {
     sprite.y = Math.max(sprite.y, 0);
 }
 
-function wander(sprite, randomizer) {
-    sprite.maybeChangeDirection(randomizer);
-    move(sprite);
+function maybeRemove(x, xs) {
+    var ind = xs.indexOf(x);
+
+    if (ind != -1) {
+        xs.splice(ind, 1);
+    }
 }

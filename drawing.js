@@ -22,7 +22,7 @@ function drawAmy() {
 
 function drawHounds() {
     hounds.forEach(function(hound) {
-        chase(hound);
+        chase(hound, Math);
         draw(hound);
     });
 }
