@@ -9,7 +9,7 @@
         ns.SYNCHRONIZED_HOUNDS = true;
         ns.FRAME_INTERVAL = 15;
         ns.TICKS = 0;
-        ns.SPRITES = this.sprites;
+        ns.SPRITES = {};
 
         ns.gameLoopIntervalId = -1;
         ns.gameSpeed = 1;
@@ -43,12 +43,12 @@
 
         // TODO: this is causing the fox to stutter when changing directions
         window.addEventListener('keyup', function(e) {
-            SPRITES.fox.direction = '';
+            window.mpr.SPRITES.fox.direction = '';
         }, false);
 
         placeSprites();
 
-        startGameLoop();
+        startGameLoop(ns);
     }
 
     function pauseOrUnpause() {
@@ -68,22 +68,22 @@
         var fox = new Fox(100, 100);
         var amy = new Amy(400, 200);
 
-        window.mpr.sprites.fox = fox;
-        window.mpr.sprites.amy = amy;
+        window.mpr.SPRITES.fox = fox;
+        window.mpr.SPRITES.amy = amy;
 
         for (i = 1; i < 2000; i++) {
-            if (SYNCHRONIZED_HOUNDS) {
-                hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT);
+            if (window.mpr.SYNCHRONIZED_HOUNDS) {
+                window.mpr.hounds[i - 1] = new Hound(i * 50 % window.mpr.CANVAS_WIDTH, i * 50 % window.mpr.CANVAS_HEIGHT);
             } else {
-                hounds[i - 1] = new Hound(i * 50 % CANVAS_WIDTH, i * 50 % CANVAS_HEIGHT, i);
+                window.mpr.hounds[i - 1] = new Hound(i * 50 % window.mpr.CANVAS_WIDTH, i * 50 % window.mpr.CANVAS_HEIGHT, i);
             }
         }
     }
 
-    function startGameLoop() {
-        drawNextFrame();
+    function startGameLoop(ns) {
+        ns.drawNextFrame();
         if (gameLoopIntervalId == -1) {
-            gameLoopIntervalId = window.setInterval(drawNextFrame, FRAME_INTERVAL);
+            gameLoopIntervalId = window.setInterval(ns.drawNextFrame, FRAME_INTERVAL);
         }
     }
 })();

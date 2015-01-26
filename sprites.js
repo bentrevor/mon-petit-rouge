@@ -1,11 +1,10 @@
-(function() {
-    window.mpr = {};
-    window.mpr.Sprite = function(options) {
+// (function() {
+    var Sprite = function(options) {
         this.id           = options.id || -1;
         this.x            = options.x;
         this.y            = options.y;
         this.size         = options.size;
-        this.speed        = options.speed * gameSpeed;
+        this.speed        = options.speed * window.mpr.gameSpeed;
         this.direction    = options.direction;
         this.fillStyle    = options.fillStyle;
         this.fearOfChange = options.fearOfChange || 0.95;
@@ -50,7 +49,7 @@
         }
     };
 
-    window.mpr.Hound = function (x, y, id) {
+    function Hound(x, y, id) {
         Sprite.call(this, { id: id,
                             x: x,
                             y: y,
@@ -87,7 +86,7 @@
         };
     }
 
-    window.mpr.Amy = function (x, y) {
+    function Amy(x, y) {
         Sprite.call(this, { x: x,
                             y: y,
                             size: 5,
@@ -97,7 +96,7 @@
                           });
     }
 
-    window.mpr.Fox = function (x, y) {
+    function Fox(x, y) {
         Sprite.call(this, { x: x,
                             y: y,
                             size: 5,
@@ -107,7 +106,7 @@
                           });
     }
 
-    window.mpr.Hound.prototype = Object.create(window.mpr.Sprite.prototype);
-    window.mpr.Amy.prototype = Object.create(window.mpr.Sprite.prototype);
-    window.mpr.Fox.prototype = Object.create(window.mpr.Sprite.prototype);
-})();
+    Hound.prototype = Object.create(Sprite.prototype);
+    Amy.prototype = Object.create(Sprite.prototype);
+    Fox.prototype = Object.create(Sprite.prototype);
+// })();

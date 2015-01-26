@@ -1,87 +1,89 @@
-function drawNextFrame() {
-    TICKS++;
-    drawBackground();
-    drawHounds();
-    drawFox();
-    drawAmy();
-    drawFollowerBars();
-}
-
-function drawBackground() {
-    context.fillStyle = 'rgb(30,30,30)';
-    context.fillRect(0, 0, 600, 400);
-}
-
-function drawFox() {
-    move(SPRITES.fox);
-    draw(SPRITES.fox);
-}
-
-function drawAmy() {
-    wander(SPRITES.amy, Math);
-    draw(SPRITES.amy);
-}
-
-function drawHounds() {
-    hounds.forEach(function(hound) {
-        hound.updateSpeed();
-        chase(hound, Math);
-        drawLine(hound);
-        draw(hound);
-    });
-}
-
-function drawLine(hound) {
-    if (hound.isChasingAmy) {
-        drawLineBetween(hound, SPRITES.amy);
-    } else {
-        drawLineBetween(hound, SPRITES.fox);
+(function(ns) {
+    ns.drawNextFrame = function() {
+        ns.TICKS++;
+        drawBackground();
+        drawHounds();
+        drawFox();
+        drawAmy();
+        drawFollowerBars();
     }
-}
 
-function drawLineBetween(spriteA, spriteB) {
-    // context.fillStyle = spriteA.fillStyle;
-    var centerAX = spriteA.x + (spriteA.size/2);
-    var centerAY = spriteA.y + (spriteA.size/2);
-    var centerBX = spriteB.x + (spriteB.size/2);
-    var centerBY = spriteB.y + (spriteB.size/2);
+    function drawBackground() {
+        ns.context.fillStyle = 'rgb(30,30,30)';
+        ns.context.fillRect(0, 0, 600, 400);
+    }
 
-    context.strokeStyle = 'rgb(150,150,150)';
+    function drawFox() {
+        move(SPRITES.fox);
+        draw(SPRITES.fox);
+    }
 
-    context.beginPath();
-    context.moveTo(centerAX, centerAY);
-    context.lineTo(centerBX, centerBY);
-    context.stroke();
-}
+    function drawAmy() {
+        wander(SPRITES.amy, Math);
+        draw(SPRITES.amy);
+    }
 
-function drawFollowerBars() {
-    var amyFollowers = 0;
-    var foxFollowers = 0;
+    function drawHounds() {
+        hounds.forEach(function(hound) {
+            hound.updateSpeed();
+            chase(hound, Math);
+            drawLine(hound);
+            draw(hound);
+        });
+    }
 
-    hounds.forEach(function(hound) {
+    function drawLine(hound) {
         if (hound.isChasingAmy) {
-            amyFollowers++;
+            drawLineBetween(hound, SPRITES.amy);
         } else {
-            foxFollowers++;
+            drawLineBetween(hound, SPRITES.fox);
         }
-    });
+    }
 
-    var foxBarWidth = (foxFollowers / hounds.length) * 400;
-    var amyBarWidth = 400 - foxBarWidth;
+    function drawLineBetween(spriteA, spriteB) {
+        // context.fillStyle = spriteA.fillStyle;
+        var centerAX = spriteA.x + (spriteA.size/2);
+        var centerAY = spriteA.y + (spriteA.size/2);
+        var centerBX = spriteB.x + (spriteB.size/2);
+        var centerBY = spriteB.y + (spriteB.size/2);
 
-    context.fillStyle = SPRITES.fox.fillStyle;
-    context.fillRect(100, 20, foxBarWidth, 20);
+        context.strokeStyle = 'rgb(150,150,150)';
 
-    context.fillStyle = SPRITES.amy.fillStyle;
-    context.fillRect(100 + foxBarWidth, 20, amyBarWidth, 20);
-}
+        context.beginPath();
+        context.moveTo(centerAX, centerAY);
+        context.lineTo(centerBX, centerBY);
+        context.stroke();
+    }
 
-function drawFollowerCount() {
-    context.fillText('amy: ' + amyFollowers, 20, 40);
-    context.fillText('fox: ' + foxFollowers, 20, 60);
-}
+    function drawFollowerBars() {
+        var amyFollowers = 0;
+        var foxFollowers = 0;
 
-function draw(sprite) {
-    context.fillStyle = sprite.fillStyle;
-    context.fillRect(sprite.x, sprite.y, sprite.size, sprite.size);
-}
+        hounds.forEach(function(hound) {
+            if (hound.isChasingAmy) {
+                amyFollowers++;
+            } else {
+                foxFollowers++;
+            }
+        });
+
+        var foxBarWidth = (foxFollowers / hounds.length) * 400;
+        var amyBarWidth = 400 - foxBarWidth;
+
+        context.fillStyle = SPRITES.fox.fillStyle;
+        context.fillRect(100, 20, foxBarWidth, 20);
+
+        context.fillStyle = SPRITES.amy.fillStyle;
+        context.fillRect(100 + foxBarWidth, 20, amyBarWidth, 20);
+    }
+
+    function drawFollowerCount() {
+        context.fillText('amy: ' + amyFollowers, 20, 40);
+        context.fillText('fox: ' + foxFollowers, 20, 60);
+    }
+
+    function draw(sprite) {
+        context.fillStyle = sprite.fillStyle;
+        context.fillRect(sprite.x, sprite.y, sprite.size, sprite.size);
+    }
+})(window.mpr);
