@@ -9,7 +9,8 @@ window.mpr = {};
         mpr.CANVAS_WIDTH = 600;
         mpr.CANVAS_HEIGHT = 400;
 
-        mpr.SYNCHRONIZED_HOUNDS = true;
+        mpr.SYNCHRONIZED_HOUNDS = false;
+        mpr.FROZEN_HOUNDS = false;
         mpr.FRAME_INTERVAL = 15;
         mpr.TICKS = 0;
         mpr.sprites = {};
@@ -37,6 +38,11 @@ window.mpr = {};
                 pauseOrUnpause();
                 break;
 
+                // h to freeze/unfreeze hounds
+            case 72:
+                freezeOrUnfreezeHounds();
+                break;
+
                 // arrow keys to move
             default:
                 mpr.sprites.fox.direction = mpr.directions[e.keyCode];
@@ -51,6 +57,14 @@ window.mpr = {};
         placeSprites();
 
         startGameLoop();
+    }
+
+    function freezeOrUnfreezeHounds() {
+        if (mpr.FROZEN_HOUNDS) {
+            mpr.FROZEN_HOUNDS = false;
+        } else {
+            mpr.FROZEN_HOUNDS = true;
+        }
     }
 
     function pauseOrUnpause() {

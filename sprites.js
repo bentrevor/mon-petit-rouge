@@ -8,12 +8,11 @@
         return new Amy(x, y);
     }
 
-    mpr.createHound = function(x, y, id) {
-        return new Hound(x, y, id);
+    mpr.createHound = function(x, y) {
+        return new Hound(x, y);
     }
 
     var Sprite = function(options) {
-        this.id           = options.id || -1;
         this.x            = options.x;
         this.y            = options.y;
         this.size         = options.size;
@@ -62,9 +61,8 @@
         }
     };
 
-    function Hound(x, y, id) {
-        Sprite.call(this, { id: id,
-                            x: x,
+    function Hound(x, y) {
+        Sprite.call(this, { x: x,
                             y: y,
                             size: 3,
                             speed: 0.5,
@@ -75,7 +73,11 @@
         this.isChasingAmy = true;
 
         this.updateSpeed = function() {
-            this.speed = Math.abs(Math.sin((mpr.TICKS / 80) + this.id) * mpr.gameSpeed);
+            if (mpr.FROZEN_HOUNDS) {
+                this.speed = 0;
+            } else {
+                this.speed = Math.abs(Math.sin(mpr.TICKS / 80) * mpr.gameSpeed);
+            }
         };
 
         this.updateTarget = function() {
