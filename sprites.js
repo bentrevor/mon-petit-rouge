@@ -1,4 +1,17 @@
-// (function() {
+(function(mpr) {
+
+    mpr.createFox = function(x, y) {
+        return new Fox(x, y);
+    }
+
+    mpr.createAmy = function(x, y) {
+        return new Amy(x, y);
+    }
+
+    mpr.createHound = function(x, y, id) {
+        return new Hound(x, y, id);
+    }
+
     var Sprite = function(options) {
         this.id           = options.id || -1;
         this.x            = options.x;
@@ -17,7 +30,7 @@
             var rand = randomizer.random();
 
             directions = directions || ['north', 'south', 'east', 'west'];
-            maybeRemove(this.direction, directions);
+            mpr.maybeRemove(this.direction, directions);
 
             this.chooseNextDirection(rand, directions);
         }
@@ -44,7 +57,7 @@
                 directions.push('north');
             }
 
-            maybeRemove(this.direction, directions);
+            mpr.maybeRemove(this.direction, directions);
             return directions;
         }
     };
@@ -62,7 +75,7 @@
         this.isChasingAmy = true;
 
         this.updateSpeed = function() {
-            this.speed = Math.abs(Math.sin((TICKS / 80) + this.id) * gameSpeed);
+            this.speed = Math.abs(Math.sin((mpr.TICKS / 80) + this.id) * mpr.gameSpeed);
         };
 
         this.updateTarget = function() {
@@ -74,14 +87,14 @@
         };
 
         this.closerToAmy = function() {
-            return this.distanceTo(SPRITES.amy) < this.distanceTo(SPRITES.fox);
+            return this.distanceTo(mpr.sprites.amy) < this.distanceTo(mpr.sprites.fox);
         };
 
         this.directionsTowardsTarget = function() {
             if (this.isChasingAmy) {
-                return this.directionsTowards(SPRITES.amy);
+                return this.directionsTowards(mpr.sprites.amy);
             } else {
-                return this.directionsTowards(SPRITES.fox);
+                return this.directionsTowards(mpr.sprites.fox);
             }
         };
     }
@@ -109,4 +122,4 @@
     Hound.prototype = Object.create(Sprite.prototype);
     Amy.prototype = Object.create(Sprite.prototype);
     Fox.prototype = Object.create(Sprite.prototype);
-// })();
+})(window.mpr);

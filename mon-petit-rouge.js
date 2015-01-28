@@ -1,21 +1,23 @@
-(function() {
-    window.init = function(ns) {
-        canvas = document.getElementById('gameCanvas');
-        ns.context = canvas.getContext('2d');
+window.mpr = {};
 
-        ns.CANVAS_WIDTH = 600;
-        ns.CANVAS_HEIGHT = 400;
+(function(mpr) {
 
-        ns.SYNCHRONIZED_HOUNDS = true;
-        ns.FRAME_INTERVAL = 15;
-        ns.TICKS = 0;
-        ns.SPRITES = {};
+    window.init = function() {
+        var canvas = document.getElementById('gameCanvas');
+        mpr.context = canvas.getContext('2d');
 
-        ns.gameLoopIntervalId = -1;
-        ns.gameSpeed = 1;
-        ns.hounds = [];
+        mpr.CANVAS_WIDTH = 600;
+        mpr.CANVAS_HEIGHT = 400;
 
-        ns.directions = {
+        mpr.SYNCHRONIZED_HOUNDS = true;
+        mpr.FRAME_INTERVAL = 15;
+        mpr.TICKS = 0;
+        mpr.sprites = {};
+
+        mpr.gameLoopIntervalId = -1;
+        mpr.gameSpeed = 1;
+
+        mpr.directions = {
             37: 'west',
             38: 'north',
             39: 'east',
@@ -37,22 +39,22 @@
 
                 // arrow keys to move
             default:
-                SPRITES.fox.direction = directions[e.keyCode];
+                mpr.sprites.fox.direction = mpr.directions[e.keyCode];
             }
         }, false);
 
         // TODO: this is causing the fox to stutter when changing directions
         window.addEventListener('keyup', function(e) {
-            window.mpr.SPRITES.fox.direction = '';
+            mpr.sprites.fox.direction = '';
         }, false);
 
         placeSprites();
 
-        startGameLoop(ns);
+        startGameLoop();
     }
 
     function pauseOrUnpause() {
-        if (gameLoopIntervalId == -1) {
+        if (mpr.gameLoopIntervalId == -1) {
             startGameLoop();
         } else {
             pauseGame();
@@ -60,30 +62,36 @@
     }
 
     function pauseGame() {
-        window.clearInterval(gameLoopIntervalId);
-        gameLoopIntervalId = -1;
+        window.clearInterval(mpr.gameLoopIntervalId);
+        mpr.gameLoopIntervalId = -1;
     }
 
     function placeSprites() {
-        var fox = new Fox(100, 100);
-        var amy = new Amy(400, 200);
+        var fox = mpr.createFox(100, 100);
+        var amy = mpr.createAmy(400, 200);
 
-        window.mpr.SPRITES.fox = fox;
-        window.mpr.SPRITES.amy = amy;
+        mpr.sprites.fox = fox;
+        mpr.sprites.amy = amy;
+        createHounds();
+    }
+
+    function createHounds() {
+        mpr.sprites.hounds = [];
 
         for (i = 1; i < 2000; i++) {
-            if (window.mpr.SYNCHRONIZED_HOUNDS) {
-                window.mpr.hounds[i - 1] = new Hound(i * 50 % window.mpr.CANVAS_WIDTH, i * 50 % window.mpr.CANVAS_HEIGHT);
+            if (mpr.SYNCHRONIZED_HOUNDS) {
+                mpr.sprites.hounds[i - 1] = mpr.createHound(i * 50 % mpr.CANVAS_WIDTH, i * 50 % mpr.CANVAS_HEIGHT);
             } else {
-                window.mpr.hounds[i - 1] = new Hound(i * 50 % window.mpr.CANVAS_WIDTH, i * 50 % window.mpr.CANVAS_HEIGHT, i);
+                mpr.sprites.hounds[i - 1] = mpr.createHound(i * 50 % mpr.CANVAS_WIDTH, i * 50 % mpr.CANVAS_HEIGHT, i);
             }
         }
     }
 
-    function startGameLoop(ns) {
-        ns.drawNextFrame();
-        if (gameLoopIntervalId == -1) {
-            gameLoopIntervalId = window.setInterval(ns.drawNextFrame, FRAME_INTERVAL);
+    function startGameLoop() {
+        mpr.drawNextFrame();
+
+        if (mpr.gameLoopIntervalId == -1) {
+            mpr.gameLoopIntervalId = window.setInterval(mpr.drawNextFrame, mpr.FRAME_INTERVAL);
         }
     }
-})();
+})(window.mpr);

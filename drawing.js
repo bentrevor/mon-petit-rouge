@@ -1,6 +1,6 @@
-(function(ns) {
-    ns.drawNextFrame = function() {
-        ns.TICKS++;
+(function(mpr) {
+    mpr.drawNextFrame = function() {
+        mpr.TICKS++;
         drawBackground();
         drawHounds();
         drawFox();
@@ -9,24 +9,24 @@
     }
 
     function drawBackground() {
-        ns.context.fillStyle = 'rgb(30,30,30)';
-        ns.context.fillRect(0, 0, 600, 400);
+        mpr.context.fillStyle = 'rgb(30,30,30)';
+        mpr.context.fillRect(0, 0, 600, 400);
     }
 
     function drawFox() {
-        move(SPRITES.fox);
-        draw(SPRITES.fox);
+        mpr.move(mpr.sprites.fox);
+        draw(mpr.sprites.fox);
     }
 
     function drawAmy() {
-        wander(SPRITES.amy, Math);
-        draw(SPRITES.amy);
+        mpr.wander(mpr.sprites.amy, Math);
+        draw(mpr.sprites.amy);
     }
 
     function drawHounds() {
-        hounds.forEach(function(hound) {
+        mpr.sprites.hounds.forEach(function(hound) {
             hound.updateSpeed();
-            chase(hound, Math);
+            mpr.chase(hound, Math);
             drawLine(hound);
             draw(hound);
         });
@@ -34,32 +34,31 @@
 
     function drawLine(hound) {
         if (hound.isChasingAmy) {
-            drawLineBetween(hound, SPRITES.amy);
+            drawLineBetween(hound, mpr.sprites.amy);
         } else {
-            drawLineBetween(hound, SPRITES.fox);
+            drawLineBetween(hound, mpr.sprites.fox);
         }
     }
 
     function drawLineBetween(spriteA, spriteB) {
-        // context.fillStyle = spriteA.fillStyle;
         var centerAX = spriteA.x + (spriteA.size/2);
         var centerAY = spriteA.y + (spriteA.size/2);
         var centerBX = spriteB.x + (spriteB.size/2);
         var centerBY = spriteB.y + (spriteB.size/2);
 
-        context.strokeStyle = 'rgb(150,150,150)';
+        mpr.context.strokeStyle = 'rgb(150,150,150)';
 
-        context.beginPath();
-        context.moveTo(centerAX, centerAY);
-        context.lineTo(centerBX, centerBY);
-        context.stroke();
+        mpr.context.beginPath();
+        mpr.context.moveTo(centerAX, centerAY);
+        mpr.context.lineTo(centerBX, centerBY);
+        mpr.context.stroke();
     }
 
     function drawFollowerBars() {
         var amyFollowers = 0;
         var foxFollowers = 0;
 
-        hounds.forEach(function(hound) {
+        mpr.sprites.hounds.forEach(function(hound) {
             if (hound.isChasingAmy) {
                 amyFollowers++;
             } else {
@@ -67,23 +66,23 @@
             }
         });
 
-        var foxBarWidth = (foxFollowers / hounds.length) * 400;
+        var foxBarWidth = (foxFollowers / mpr.sprites.hounds.length) * 400;
         var amyBarWidth = 400 - foxBarWidth;
 
-        context.fillStyle = SPRITES.fox.fillStyle;
-        context.fillRect(100, 20, foxBarWidth, 20);
+        mpr.context.fillStyle = mpr.sprites.fox.fillStyle;
+        mpr.context.fillRect(100, 20, foxBarWidth, 20);
 
-        context.fillStyle = SPRITES.amy.fillStyle;
-        context.fillRect(100 + foxBarWidth, 20, amyBarWidth, 20);
+        mpr.context.fillStyle = mpr.sprites.amy.fillStyle;
+        mpr.context.fillRect(100 + foxBarWidth, 20, amyBarWidth, 20);
     }
 
     function drawFollowerCount() {
-        context.fillText('amy: ' + amyFollowers, 20, 40);
-        context.fillText('fox: ' + foxFollowers, 20, 60);
+        mpr.context.fillText('amy: ' + amyFollowers, 20, 40);
+        mpr.context.fillText('fox: ' + foxFollowers, 20, 60);
     }
 
     function draw(sprite) {
-        context.fillStyle = sprite.fillStyle;
-        context.fillRect(sprite.x, sprite.y, sprite.size, sprite.size);
+        mpr.context.fillStyle = sprite.fillStyle;
+        mpr.context.fillRect(sprite.x, sprite.y, sprite.size, sprite.size);
     }
 })(window.mpr);
